@@ -1,4 +1,6 @@
-1. Results on 1 billion trials each: num_servers = 1, arrival_rate = .9, service_size_mean = 1, without truncation
+1. Base results, and testing cutoff search
+
+Results on 1 billion trials each: num_servers = 1, arrival_rate = .9, service_size_mean = 1, without truncation
 
 Cutoffs, mean response time, mean slowdown
 0.01 9.91876339593 51.3465323337
@@ -45,7 +47,7 @@ Cutoffs, mean response time, mean slowdown
 1.45 5.53636510877 29.2906205193
 
 
-2a. In depth Statistics on same system, cutoff = 1
+2a. In depth Statistics on the same system, cutoff = 1
 
 1.59879785662 13.8156684162 small and large mean response time
 40.1879108656 8.04619338079 small and large mean slowdown
@@ -79,7 +81,7 @@ Cutoffs, mean response time, mean slowdown
 
 
 
-2b. Keeping all parameters the same, truncate below .0001:
+2b. Extended statistics with truncation below .0001:
 
 1.59888409525 13.8113393575 small and large mean response time
 16.7176443119 8.04352300611 small and large mean slowdown
@@ -118,7 +120,8 @@ Cutoffs, mean response time, mean slowdown
 
 
 
-3a. Results on 100 million trials each: num_servers = 1, arrival_rate = .9, service_size_mean = 1, with truncation at .0001
+3a. Testing the cutoff finding with truncation, as well as whether cutoff changes significantly when truncated.
+Results on 100 million trials each: num_servers = 1, arrival_rate = .9, service_size_mean = 1, with truncation at .0001
 
 Cutoffs, mean response time, mean slowdown
 0.1 9.18056198375 23.441244792
@@ -525,7 +528,7 @@ Cutoffs, mean response time, mean slowdown
 
 
 
-3b. 3a but repeated over a smaller range with 1 billion runs each
+3b. 3a but repeated over a smaller range with 1 billion runs each, more precise cutoff data
 
 Cutoffs, mean response time, mean slowdown
 0.6 7.00463383849 13.8582654391
@@ -626,7 +629,10 @@ Cutoffs, mean response time, mean slowdown
 0.859 6.36222396271 13.4197641122
 
 
-4a. Results on 1 billion trials each: num_servers = 2, arrival_rate = 1.8, service_size_mean = 1
+
+
+4a. Testing effects of increasing the number of servers at various loads
+Results on 1 billion trials each: num_servers = 2, arrival_rate = 1.8, service_size_mean = 1
 2 servers, load .9
 
 x marks the interval containing optimal slowdown cutoff
