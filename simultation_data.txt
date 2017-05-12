@@ -1,4 +1,4 @@
-1. Results on 1 billion trials each: num_servers = 1, arrival_rate = .9, service_size_mean = 1
+1. Results on 1 billion trials each: num_servers = 1, arrival_rate = .9, service_size_mean = 1, without truncation
 
 Cutoffs, mean response time, mean slowdown
 0.01 9.91876339593 51.3465323337
@@ -45,7 +45,7 @@ Cutoffs, mean response time, mean slowdown
 1.45 5.53636510877 29.2906205193
 
 
-2a. Statistics on same system, cutoff = 1
+2a. In depth Statistics on same system, cutoff = 1
 
 1.59879785662 13.8156684162 small and large mean response time
 40.1879108656 8.04619338079 small and large mean slowdown
@@ -78,7 +78,8 @@ Cutoffs, mean response time, mean slowdown
 76.5807860827 large slowdown variance
 
 
-2b. Keep all parameters the same, truncate below .0001:
+
+2b. Keeping all parameters the same, truncate below .0001:
 
 1.59888409525 13.8113393575 small and large mean response time
 16.7176443119 8.04352300611 small and large mean slowdown
@@ -110,7 +111,14 @@ Cutoffs, mean response time, mean slowdown
 40454.913805 small slowdown variance
 77.0357696674 large slowdown variance
 
-3a. Results on 1 billion trials each: num_servers = 1, arrival_rate = .9, service_size_mean = 1
+
+
+
+
+
+
+
+3a. Results on 100 million trials each: num_servers = 1, arrival_rate = .9, service_size_mean = 1, with truncation at .0001
 
 Cutoffs, mean response time, mean slowdown
 0.1 9.18056198375 23.441244792
@@ -517,7 +525,7 @@ Cutoffs, mean response time, mean slowdown
 
 
 
-3b. 3a but repeated over a smaller range
+3b. 3a but repeated over a smaller range with 1 billion runs each
 
 Cutoffs, mean response time, mean slowdown
 0.6 7.00463383849 13.8582654391
@@ -592,6 +600,9 @@ Cutoffs, mean response time, mean slowdown
 0.87 6.33689966749 13.4171829072
 0.88 6.32218328488 13.416276308
 
+
+
+Same, repeated again
 Cutoffs, mean response time, mean slowdown
 0.84 6.39893201092 13.410650677
 0.841 6.40003555821 13.4150706635
