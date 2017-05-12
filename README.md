@@ -1,6 +1,6 @@
 # SITA_explorer
 
-This is a simulation, as coded, of an M/M/k queueing system with several queues, priority classes over the jobs by size (SITA cutoffs), non-preemption across jobs and transferable, multiple servers as resources. Any of these parameters can be changed easily in the main file, SITAoptreserve, when running, by, for example, simply changing the random exponential to whichever distribution you desire for a G/G/k. 
+This is a simulation, as coded, of an M/M/k queueing system with several queues, priority classes over the jobs by size (SITA cutoffs), non-preemption across jobs and transferable, multiple servers as resources. Any of these parameters can be changed easily in the main file, SITAoptreserve, by, for example, simply changing the random exponential to whichever distribution you desire for a G/G/k. 
 
 If you wish to test the effect of reserving servers for high priority jobs, in the form of not allowing low priority jobs to take new servers on arrival when load is above a certain threshold, use SITAoptreserve.
 
