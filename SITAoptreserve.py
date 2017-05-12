@@ -105,8 +105,6 @@ def findMRTandMST(cutoff = 1, total_jobs = 10000000, num_servers = 2, arrival_ra
     print num_servers, cutoff, mean_response_time, mean_slowdown
 
 
-for mynumservs in [y for y in range(100,1000, 100)]:
-    for mycutoff in [0 + .01 * x for x in range(10)]:
-        findMRTandMST(num_servers= mynumservs, cutoff=mycutoff, arrival_rate=.9*mynumservs)
+findMRTandMST()
 
 print time.time() - starting_time, "seconds"
