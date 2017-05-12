@@ -16,8 +16,11 @@ def findMRTandMST(cutoff = 1, total_jobs = 10000000, num_servers = 2, arrival_ra
     myservs = range(num_servers)
     backserv = reversed(myservs)
     myunres = myservs[res_servers:]
+
+    # total response time and total slowdown
     tresponsetime = 0
     tslowdown = 0
+
     finished_jobs = 0
     waiting_info = {}
     arrivused = 1
@@ -25,42 +28,65 @@ def findMRTandMST(cutoff = 1, total_jobs = 10000000, num_servers = 2, arrival_ra
 
 
 
+
+    """ We wait until we have exactly total_jobs finished to terminate, even if jobs are remaining in the system
+           This causes some inaccuracy for small numbers of jobs, as the size of jobs that have finished will be slightly
+           smaller than that of all jobs that have arrived """
     while finished_jobs < total_jobs:
+
+        #arrivused tests whether the last arrival has been added to the queue
         if arrivused:
             next_arrival_time = curr_time + expov(arrival_rate)
             arrivused = 0
+
+        #we check to see if the next event is an arrival or a departure
         next_event_time = next_arrival_time
+
+
+        #to_depart holds the index of the server with the next departure
         to_depart = -1
+
+        #iterate over all servers, check their departure time
         for server_num in myservs:
             if busy_server_array[server_num][1] > 0 and busy_server_array[server_num][1] < next_event_time:
                 next_event_time = busy_server_array[server_num][1]
                 to_depart = server_num
+
         #so no departures before the next arrival - need to try to assign arrival to server, add to full job array
         if next_event_time == next_arrival_time:
             assigned = 0
             curr_time = next_arrival_time
             new_job_size = expov(service_size_mean)
 
+            # uncomment the next two lines to allow truncation of job sizes
+
             # while new_job_size < .0001:
             #     new_job_size = random.expovariate(service_size_mean)
+
+
+            #queue 0 is for high priority jobs, queue 1 is for jobs above the cutoff (low priority)
             which_queue = 0
             if new_job_size > cutoff:
                 which_queue = 1
 
-            #decision here about if 1+ servers free, small arriv, assign to normal or res. Going with norm here
+            #if the job is high priority, assign it to any server
             if which_queue == 0:
                 for server_num in backserv:
-                    if busy_server_array[server_num][1] == -1: # check if this is faster without ind, comp to tuple
+                    if busy_server_array[server_num][1] == -1:
                         busy_server_array[server_num] = (jobs_arrived, curr_time+new_job_size, new_job_size, curr_time)
                         assigned = 1
                         break
+
+            #if the job is low priority, assign it to the first unreserved server, myunres, here the last n-1 servers
             elif which_queue == 1:
                 for server_num in myunres:
-                    if busy_server_array[server_num][1] == -1:  # check if this is faster without ind, comp to tuple
+                    if busy_server_array[server_num][1] == -1:
                         busy_server_array[server_num] = (
                         jobs_arrived, curr_time + new_job_size, new_job_size, curr_time)
                         assigned = 1
                         break
+
+            #if the job couldn't be assigned to a free server, add it to the queue and hold its info
             if assigned == 0:
                 if which_queue == 0:
                     waiting_queue_high.append(jobs_arrived)
@@ -70,17 +96,30 @@ def findMRTandMST(cutoff = 1, total_jobs = 10000000, num_servers = 2, arrival_ra
                     waiting_info[jobs_arrived] = (new_job_size, curr_time)
             jobs_arrived += 1
             arrivused = 1
+
+
+        #this else statement is triggered if the next event will be a departure
         else:
 
             curr_time = next_event_time
+
+            # sanity check that a real server holds the departure
             assert to_depart != -1
+
+            # this measures statistics at departure time: we add the response time and slowdown for the job to the
+            # total response time and slowdown so far
             myresp = curr_time - busy_server_array[to_depart][3]
             tresponsetime += myresp
-            myslow = max(myresp / float(busy_server_array[to_depart][2]), 1.0)
+            myslow = myresp / float(busy_server_array[to_depart][2])
             tslowdown += myslow
 
             finished_jobs += 1
+
+            #sets the server at to_depart to be free
             busy_server_array[to_depart] = (-1, -1, -1, -1)
+
+
+            #check if there is a job waiting, if so, assign it. First check our high priority waiting queue, then low
             if len(waiting_queue_high):
 
                 high_pri_job = waiting_queue_high[0]
@@ -97,14 +136,14 @@ def findMRTandMST(cutoff = 1, total_jobs = 10000000, num_servers = 2, arrival_ra
                 waiting_queue_low.remove(next_job)
                 waiting_info.pop(next_job)
 
-    # jobs that finished will have a nonzero val in their finished times array, and that val larger than their arriv time
-
     mean_response_time = tresponsetime / float(finished_jobs)
     mean_slowdown = tslowdown / float(finished_jobs)
 
     print num_servers, cutoff, mean_response_time, mean_slowdown
 
 
-findMRTandMST()
+for mynumservs in [y for y in range(100,1000, 100)]:
+    for mycutoff in [0 + .01 * x for x in range(10)]:
+        findMRTandMST(num_servers= mynumservs, cutoff=mycutoff, arrival_rate=.9*mynumservs)
 
 print time.time() - starting_time, "seconds"
